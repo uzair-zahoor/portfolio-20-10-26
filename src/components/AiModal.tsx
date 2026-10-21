@@ -88,10 +88,13 @@ export default function AiModal({ isOpen, onClose }: AiModalProps) {
   };
 
   const quickPrompts = [
-    { label: 'Pixako & Allotrac', prompt: "Tell me about Uzair's work at Pixako Technologies" },
-    { label: 'Technical Skills', prompt: 'What are his primary Next.js & backend technical skills?' },
-    { label: 'Architecture Breakdown', prompt: "Tell me about Allotrac's multi-tenant architecture" },
-    { label: 'Contact Info', prompt: 'How can I contact Uzair?' }
+    { label: 'Allotrac SaaS', prompt: "Tell me about Uzair's work on Allotrac at Pixako Technologies" },
+    { label: 'Multi-Tenant Isolation', prompt: "How does Uzair architect multi-tenant data isolation?" },
+    { label: 'DataLoader Batching', prompt: "How did DataLoader reduce API latency by 85%?" },
+    { label: 'Redis Telemetry', prompt: "Explain the Redis Pub/Sub & WebSocket telemetry pipeline" },
+    { label: 'Xero Billing Sync', prompt: "How was the automated Xero invoicing microservice built?" },
+    { label: 'Impact & Metrics', prompt: "What are Uzair's key quantifiable production impact metrics?" },
+    { label: 'Contact Info', prompt: 'How can I connect with Uzair?' }
   ];
 
   return (

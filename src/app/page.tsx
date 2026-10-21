@@ -5,9 +5,12 @@ import ThreeBackground from '@/components/ThreeBackground';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
+import Projects from '@/components/Projects';
+import ArchitectureShowcase from '@/components/ArchitectureShowcase';
+import TechnicalPlayground from '@/components/TechnicalPlayground';
 import Skills from '@/components/Skills';
 import Experience from '@/components/Experience';
-import Projects from '@/components/Projects';
+import ImpactAndCredentials from '@/components/ImpactAndCredentials';
 import AiLab from '@/components/AiLab';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
@@ -27,12 +30,15 @@ export default function Home() {
       <Navbar onOpenAiModal={() => setAiModalOpen(true)} />
 
       {/* Main Content Sections */}
-      <main className="relative z-10 pt-28">
+      <main className="relative z-10 pt-28 space-y-8">
         <Hero />
         <About />
+        <Projects onSelectProject={(id) => setActiveProjectModal(id)} />
+        <ArchitectureShowcase />
+        <TechnicalPlayground />
         <Skills />
         <Experience />
-        <Projects onSelectProject={(id) => setActiveProjectModal(id)} />
+        <ImpactAndCredentials />
         <AiLab onOpenAiModal={() => setAiModalOpen(true)} />
         <Contact />
       </main>
@@ -40,7 +46,7 @@ export default function Home() {
       {/* Semantic Footer */}
       <Footer />
 
-      {/* Interactive Project Architecture Modal */}
+      {/* Interactive Multi-Tab Project Architecture Modal */}
       <ProjectModal
         projectId={activeProjectModal}
         onClose={() => setActiveProjectModal(null)}

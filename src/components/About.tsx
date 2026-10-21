@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { User, ShieldCheck, Server } from 'lucide-react';
+import { User, ShieldCheck, Server, TrendingUp, Sparkles } from 'lucide-react';
 import { personalInfo } from '@/data/portfolioData';
 
 export default function About() {
@@ -104,6 +104,26 @@ export default function About() {
               <div>
                 <h3 className="font-bold text-white text-sm">Real-Time & Performance</h3>
                 <p className="text-xs text-slate-400 mt-1">WebSockets, Redis Pub/Sub, DataLoader N+1 batching, and query optimization.</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 p-4 rounded-2xl bg-slate-900/40 border border-white/5 hover:border-emerald-500/30 transition-all">
+              <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mt-0.5 shrink-0">
+                <TrendingUp className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-white text-sm">Automated Billing & APIs</h3>
+                <p className="text-xs text-slate-400 mt-1">Xero OAuth 2.0 integration, BullMQ queues, and automated tenant reconciliation.</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 p-4 rounded-2xl bg-slate-900/40 border border-white/5 hover:border-amber-500/30 transition-all">
+              <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 mt-0.5 shrink-0">
+                <Sparkles className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-white text-sm">AI Agents & Document RAG</h3>
+                <p className="text-xs text-slate-400 mt-1">Gemini 1.5 Pro multimodal extraction and vector search for transport manifests.</p>
               </div>
             </div>
           </div>

@@ -2,9 +2,11 @@
 
 import React from 'react';
 import { User, ShieldCheck, Server, TrendingUp, Sparkles } from 'lucide-react';
-import { personalInfo } from '@/data/portfolioData';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function About() {
+  const { t, data, language } = useLanguage();
+
   return (
     <section id="about" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -18,32 +20,32 @@ export default function About() {
 
             <div className="flex items-center gap-4 relative z-10">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-blue-500/30">
-                {personalInfo.initials}
+                {data.personalInfo.initials}
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white">{personalInfo.name}</h3>
-                <p className="text-sm text-blue-400 font-mono">{personalInfo.role} @ Pixako</p>
-                <p className="text-xs text-slate-400">{personalInfo.location}</p>
+                <h3 className="text-xl font-bold text-white">{data.personalInfo.name}</h3>
+                <p className="text-sm text-blue-400 font-mono">{data.personalInfo.role} @ Pixako</p>
+                <p className="text-xs text-slate-400">{data.personalInfo.location}</p>
               </div>
             </div>
 
             <div className="space-y-3 pt-2 text-sm text-slate-300 border-t border-white/10 relative z-10">
               <div className="flex items-center justify-between py-1">
-                <span className="text-slate-400">Current Role</span>
-                <span className="font-medium text-white">{personalInfo.role}</span>
+                <span className="text-slate-400">{t.aboutRoleLabel}</span>
+                <span className="font-medium text-white">{data.personalInfo.role}</span>
               </div>
               <div className="flex items-center justify-between py-1">
-                <span className="text-slate-400">Primary Domain</span>
-                <span className="font-medium text-white">Multi-Tenant Transport SaaS</span>
+                <span className="text-slate-400">{t.aboutDomainLabel}</span>
+                <span className="font-medium text-white">{t.aboutDomainValue}</span>
               </div>
               <div className="flex items-center justify-between py-1">
-                <span className="text-slate-400">Core Stack</span>
-                <span className="font-medium text-white">Next.js, React, Node, GraphQL, MongoDB</span>
+                <span className="text-slate-400">{t.aboutStackLabel}</span>
+                <span className="font-medium text-white force-ltr text-xs sm:text-sm">{t.aboutStackValue}</span>
               </div>
               <div className="flex items-center justify-between py-1">
-                <span className="text-slate-400">Education</span>
+                <span className="text-slate-400">{t.aboutEducationLabel}</span>
                 <span className="font-medium text-white">
-                  {personalInfo.education.degree} ({personalInfo.education.year})
+                  {data.personalInfo.education.degree} ({data.personalInfo.education.year})
                 </span>
               </div>
             </div>
@@ -54,10 +56,10 @@ export default function About() {
                 <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
                 <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
                 <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
-                <span className="ml-2 text-[10px] text-slate-400">summary.ts</span>
+                <span className="ml-2 rtl:mr-2 text-[10px] text-slate-400">summary.ts</span>
               </div>
-              <p className="text-emerald-400 leading-relaxed">
-                &ldquo;Designing resilient backend workflows, tenant-isolated data architectures, and dynamic React user experiences.&rdquo;
+              <p className="text-emerald-400 leading-relaxed font-sans">
+                {t.aboutQuote}
               </p>
             </div>
           </div>
@@ -66,22 +68,30 @@ export default function About() {
         {/* Narrative Column */}
         <div className="lg:col-span-7 space-y-6">
           <div className="inline-flex items-center gap-2 text-xs font-mono text-blue-400 tracking-wider uppercase bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
-            <User className="w-3.5 h-3.5" /> Professional Overview
+            <User className="w-3.5 h-3.5" /> {t.aboutBadge}
           </div>
 
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
-            Software Engineer specializing in multi-tenant SaaS and modern Next.js systems.
+            {t.aboutTitle}
           </h2>
 
           <div className="space-y-4 text-slate-300 text-base leading-relaxed">
             <p>
-              I am a <strong className="text-white">Software Engineer</strong> with over {personalInfo.experienceYears} of professional experience building production-grade web applications and multi-tenant SaaS platforms.
+              {language === 'ur' ? (
+                <>
+                  میں ایک <strong className="text-white">سافٹ ویئر انجینئر</strong> ہوں جس کے پاس پروڈکشن گریڈ ویب ایپلی کیشنز اور ملٹی ٹیننٹ ساس (SaaS) پلیٹ فارمز تیار کرنے کا {data.personalInfo.experienceYears} کا پیشہ ورانہ تجربہ ہے۔
+                </>
+              ) : (
+                <>
+                  I am a <strong className="text-white">{data.personalInfo.role}</strong> with over {data.personalInfo.experienceYears} of professional experience building production-grade web applications and multi-tenant SaaS platforms.
+                </>
+              )}
             </p>
             <p>
-              Currently at <strong className="text-white">Pixako Technologies</strong>, I contribute to the core full-stack architecture for <strong>Allotrac</strong>—a high-throughput multi-tenant transport management SaaS platform. My day-to-day work centers on designing tenant-isolated data access patterns, building GraphQL resolvers and subscriptions, implementing real-time WebSockets with Redis Pub/Sub, and optimizing database queries using DataLoader.
+              {t.aboutP2Text}
             </p>
             <p>
-              Holding a {personalInfo.education.degree} from {personalInfo.education.institution}, I maintain a deep commitment to clean architecture, role-based security systems (RBAC), third-party integrations (such as Xero API), and reactive frontend interfaces.
+              {t.aboutP3Text}
             </p>
           </div>
 
@@ -92,8 +102,8 @@ export default function About() {
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-bold text-white text-sm">Tenant Isolation & RBAC</h3>
-                <p className="text-xs text-slate-400 mt-1">Multi-tenant schemas, cross-tenant resource sharing, and permission controls.</p>
+                <h3 className="font-bold text-white text-sm">{t.aboutRbacTitle}</h3>
+                <p className="text-xs text-slate-400 mt-1">{t.aboutRbacDesc}</p>
               </div>
             </div>
 
@@ -102,8 +112,8 @@ export default function About() {
                 <Server className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-bold text-white text-sm">Real-Time & Performance</h3>
-                <p className="text-xs text-slate-400 mt-1">WebSockets, Redis Pub/Sub, DataLoader N+1 batching, and query optimization.</p>
+                <h3 className="font-bold text-white text-sm">{t.aboutRealtimeTitle}</h3>
+                <p className="text-xs text-slate-400 mt-1">{t.aboutRealtimeDesc}</p>
               </div>
             </div>
 
@@ -112,8 +122,8 @@ export default function About() {
                 <TrendingUp className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-bold text-white text-sm">Automated Billing & APIs</h3>
-                <p className="text-xs text-slate-400 mt-1">Xero OAuth 2.0 integration, BullMQ queues, and automated tenant reconciliation.</p>
+                <h3 className="font-bold text-white text-sm">{t.aboutFinTitle}</h3>
+                <p className="text-xs text-slate-400 mt-1">{t.aboutFinDesc}</p>
               </div>
             </div>
 
@@ -122,8 +132,8 @@ export default function About() {
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-bold text-white text-sm">AI Agents & Document RAG</h3>
-                <p className="text-xs text-slate-400 mt-1">Gemini 1.5 Pro multimodal extraction and vector search for transport manifests.</p>
+                <h3 className="font-bold text-white text-sm">{t.aiLabTitle}</h3>
+                <p className="text-xs text-slate-400 mt-1">{t.aboutQueryDesc}</p>
               </div>
             </div>
           </div>

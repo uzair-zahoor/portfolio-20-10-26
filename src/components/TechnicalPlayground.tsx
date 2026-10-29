@@ -10,11 +10,11 @@ import {
   Database, 
   ShieldCheck, 
   Zap, 
-  CheckCircle2,
-  Clock,
-  Layers,
-  ArrowRight
+  CheckCircle2, 
+  Clock, 
+  Layers 
 } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface SimulatedEvent {
   id: string;
@@ -33,26 +33,33 @@ const SAMPLE_TENANTS = [
   { id: 'tenant_metro_1109', name: 'Metro Express Couriers', code: 'METRO', fleetSize: 120 }
 ];
 
-const SAMPLE_QUERIES = [
-  {
-    id: 'dispatches',
-    title: 'query GetTenantDispatches($status: "IN_TRANSIT")',
-    desc: 'Fetches active driver stops with DataLoader batched driver lookups.'
-  },
-  {
-    id: 'telematics',
-    title: 'subscription OnFleetTelemetry($tenantId)',
-    desc: 'Streams live GPS coordinates from Redis Pub/Sub WebSocket broker.'
-  },
-  {
-    id: 'xero_sync',
-    title: 'mutation TriggerXeroReconciliation($jobId)',
-    desc: 'Dispatches asynchronous webhook to generate itemized Xero invoice.'
-  }
-];
-
 export default function TechnicalPlayground() {
+  const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState<'simulator' | 'stream'>('simulator');
+
+  const SAMPLE_QUERIES = [
+    {
+      id: 'dispatches',
+      title: 'query GetTenantDispatches($status: "IN_TRANSIT")',
+      desc: language === 'ur' 
+        ? 'ڈیٹا لوڈر کے ساتھ ڈرائیورز کا مشترکہ ڈیٹا اور فعال ڈسپیچز نکالتا ہے۔' 
+        : 'Fetches active driver stops with DataLoader batched driver lookups.'
+    },
+    {
+      id: 'telematics',
+      title: 'subscription OnFleetTelemetry($tenantId)',
+      desc: language === 'ur'
+        ? 'ریڈس پب/سب ویب ساکٹ بروکر سے لائیو جی پی ایس کوآرڈینیٹس سٹریم کرتا ہے۔'
+        : 'Streams live GPS coordinates from Redis Pub/Sub WebSocket broker.'
+    },
+    {
+      id: 'xero_sync',
+      title: 'mutation TriggerXeroReconciliation($jobId)',
+      desc: language === 'ur'
+        ? 'زیرو (Xero) اکاؤنٹنگ میں خودکار انوائس بنانے کے لیے غیر متضاد ویب ہک بھیجتا ہے۔'
+        : 'Dispatches asynchronous webhook to generate itemized Xero invoice.'
+    }
+  ];
 
   // Simulator State
   const [selectedTenantIndex, setSelectedTenantIndex] = useState<number>(0);
@@ -161,7 +168,7 @@ export default function TechnicalPlayground() {
       setQueryOutput(mockResult);
       setExecutionStats({
         latency,
-        dbQueries: selectedQuery.id === 'dispatches' ? 2 : 1, // Batch proof
+        dbQueries: selectedQuery.id === 'dispatches' ? 2 : 1,
         dataLoaderBatchHits: selectedQuery.id === 'dispatches' ? 2 : 0,
         tenantMatch: true
       });
@@ -230,38 +237,38 @@ export default function TechnicalPlayground() {
     <section id="playground" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative">
       <div className="text-center space-y-4 mb-16">
         <div className="inline-flex items-center gap-2 text-xs font-mono text-cyan-400 tracking-wider uppercase bg-cyan-500/10 px-3.5 py-1.5 rounded-full border border-cyan-500/20 shadow-inner">
-          <Zap className="w-3.5 h-3.5" /> Interactive Systems Lab
+          <Zap className="w-3.5 h-3.5" /> {t.playBadge}
         </div>
         <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-          Live Architecture Playground
+          {t.playTitle}
         </h2>
         <p className="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
-          Test real-time multi-tenant isolation schemas, query batching mechanics, and live event pub/sub streams right from your browser.
+          {t.playSubtitle}
         </p>
 
         {/* Tab switcher */}
         <div className="flex items-center justify-center gap-3 pt-6">
           <button
             onClick={() => setActiveTab('simulator')}
-            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 border ${
+            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 border cursor-pointer ${
               activeTab === 'simulator'
                 ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-blue-400/40 shadow-lg shadow-blue-500/20'
                 : 'bg-slate-900/80 text-slate-400 border-white/10 hover:text-white hover:bg-white/5'
             }`}
           >
             <Database className="w-4 h-4 text-blue-300" />
-            Multi-Tenant GraphQL Simulator
+            {t.playTabSim}
           </button>
           <button
             onClick={() => setActiveTab('stream')}
-            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 border ${
+            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 border cursor-pointer ${
               activeTab === 'stream'
                 ? 'bg-gradient-to-r from-cyan-600 to-indigo-600 text-white border-cyan-400/40 shadow-lg shadow-cyan-500/20'
                 : 'bg-slate-900/80 text-slate-400 border-white/10 hover:text-white hover:bg-white/5'
             }`}
           >
             <Radio className="w-4 h-4 text-cyan-300" />
-            Live Redis Event Stream
+            {t.playTabStream}
           </button>
         </div>
       </div>
@@ -278,14 +285,14 @@ export default function TechnicalPlayground() {
             <div className="md:col-span-5 space-y-2">
               <label className="text-xs font-mono font-bold text-slate-300 flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                Select Authenticated Tenant:
+                {t.playSelectTenant}:
               </label>
               <div className="grid grid-cols-1 gap-2">
                 {SAMPLE_TENANTS.map((tenant, idx) => (
                   <button
                     key={tenant.id}
                     onClick={() => setSelectedTenantIndex(idx)}
-                    className={`p-3 rounded-xl border text-left transition-all flex items-center justify-between text-xs ${
+                    className={`p-3 rounded-xl border text-left rtl:text-right transition-all flex items-center justify-between text-xs cursor-pointer ${
                       selectedTenantIndex === idx
                         ? 'bg-blue-600/20 border-blue-500 text-white font-bold ring-1 ring-blue-500/30'
                         : 'bg-slate-950/60 border-white/5 text-slate-400 hover:text-white hover:bg-slate-950'
@@ -293,10 +300,10 @@ export default function TechnicalPlayground() {
                   >
                     <div>
                       <div className="text-white font-semibold">{tenant.name}</div>
-                      <div className="text-[11px] font-mono text-slate-400">{tenant.id}</div>
+                      <div className="text-[11px] font-mono text-slate-400 force-ltr">{tenant.id}</div>
                     </div>
                     <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-white/5 border border-white/10 text-slate-300">
-                      {tenant.fleetSize} units
+                      {tenant.fleetSize} {language === 'ur' ? 'گاڑیاں' : 'units'}
                     </span>
                   </button>
                 ))}
@@ -307,20 +314,20 @@ export default function TechnicalPlayground() {
             <div className="md:col-span-5 space-y-2">
               <label className="text-xs font-mono font-bold text-slate-300 flex items-center gap-1.5">
                 <Layers className="w-4 h-4 text-cyan-400" />
-                Select GraphQL Operation:
+                {t.playSelectQuery}:
               </label>
               <div className="grid grid-cols-1 gap-2">
                 {SAMPLE_QUERIES.map((q, idx) => (
                   <button
                     key={q.id}
                     onClick={() => setSelectedQueryIndex(idx)}
-                    className={`p-3 rounded-xl border text-left transition-all text-xs ${
+                    className={`p-3 rounded-xl border text-left rtl:text-right transition-all text-xs cursor-pointer ${
                       selectedQueryIndex === idx
                         ? 'bg-cyan-600/20 border-cyan-500 text-white font-bold ring-1 ring-cyan-500/30'
                         : 'bg-slate-950/60 border-white/5 text-slate-400 hover:text-white hover:bg-slate-950'
                     }`}
                   >
-                    <div className="font-mono text-cyan-300 font-semibold">{q.title}</div>
+                    <div className="font-mono text-cyan-300 font-semibold force-ltr">{q.title}</div>
                     <div className="text-[11px] text-slate-400 mt-0.5">{q.desc}</div>
                   </button>
                 ))}
@@ -332,10 +339,10 @@ export default function TechnicalPlayground() {
               <button
                 onClick={handleExecuteQuery}
                 disabled={isExecutingQuery}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-blue-500/20 flex flex-col items-center justify-center gap-1 active:scale-95 disabled:opacity-50"
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-blue-500/20 flex flex-col items-center justify-center gap-1 active:scale-95 disabled:opacity-50 cursor-pointer"
               >
                 <Play className={`w-4 h-4 ${isExecutingQuery ? 'animate-spin' : ''}`} />
-                <span>{isExecutingQuery ? 'Running...' : 'Execute Query'}</span>
+                <span>{isExecutingQuery ? (language === 'ur' ? 'پروسیسنگ...' : 'Running...') : t.playExecBtn}</span>
               </button>
             </div>
           </div>
@@ -344,38 +351,56 @@ export default function TechnicalPlayground() {
           {executionStats && (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-white/10 relative z-10">
               <div className="p-3 rounded-xl bg-slate-950/80 border border-white/5">
-                <span className="text-[11px] text-slate-400 block">Execution Latency</span>
+                <span className="text-[11px] text-slate-400 block">
+                  {language === 'ur' ? 'ایگزیکیوشن تاخیر' : 'Execution Latency'}
+                </span>
                 <span className="text-base font-extrabold text-emerald-400 font-mono">
                   {executionStats.latency} ms
                 </span>
-                <span className="text-[10px] text-slate-500 block">Sub-50ms target</span>
+                <span className="text-[10px] text-slate-500 block">
+                  {language === 'ur' ? '۵۰ ملی سیکنڈ سے کم' : 'Sub-50ms target'}
+                </span>
               </div>
               <div className="p-3 rounded-xl bg-slate-950/80 border border-white/5">
-                <span className="text-[11px] text-slate-400 block">Database Roundtrips</span>
+                <span className="text-[11px] text-slate-400 block">
+                  {language === 'ur' ? 'ڈیٹا بیس کالز' : 'Database Roundtrips'}
+                </span>
                 <span className="text-base font-extrabold text-cyan-400 font-mono">
-                  {executionStats.dbQueries} query (batched)
+                  {executionStats.dbQueries} {language === 'ur' ? 'کوئیری (بیچ)' : 'query (batched)'}
                 </span>
-                <span className="text-[10px] text-slate-500 block">N+1 eliminated</span>
+                <span className="text-[10px] text-slate-500 block">
+                  {language === 'ur' ? 'N+1 مسئلہ ختم' : 'N+1 eliminated'}
+                </span>
               </div>
               <div className="p-3 rounded-xl bg-slate-950/80 border border-white/5">
-                <span className="text-[11px] text-slate-400 block">DataLoader Status</span>
+                <span className="text-[11px] text-slate-400 block">
+                  {language === 'ur' ? 'ڈیٹا لوڈر صورتحال' : 'DataLoader Status'}
+                </span>
                 <span className="text-base font-extrabold text-purple-400 font-mono">
-                  {executionStats.dataLoaderBatchHits > 0 ? 'Cache & Batch Hit' : 'Direct Lookup'}
+                  {executionStats.dataLoaderBatchHits > 0 
+                    ? (language === 'ur' ? 'کیشے اور بیچ ہٹ' : 'Cache & Batch Hit') 
+                    : (language === 'ur' ? 'ڈائریکٹ لوک اپ' : 'Direct Lookup')}
                 </span>
-                <span className="text-[10px] text-slate-500 block">Memory deduplicated</span>
+                <span className="text-[10px] text-slate-500 block">
+                  {language === 'ur' ? 'میموری محفوظ' : 'Memory deduplicated'}
+                </span>
               </div>
               <div className="p-3 rounded-xl bg-slate-950/80 border border-white/5">
-                <span className="text-[11px] text-slate-400 block">Tenant Boundary</span>
-                <span className="text-base font-extrabold text-green-400 font-mono flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Isolated
+                <span className="text-[11px] text-slate-400 block">
+                  {language === 'ur' ? 'ٹیننٹ حد بندی' : 'Tenant Boundary'}
                 </span>
-                <span className="text-[10px] text-slate-500 block">Zero cross-leak</span>
+                <span className="text-base font-extrabold text-green-400 font-mono flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> {language === 'ur' ? 'محفوظ و الگ' : 'Isolated'}
+                </span>
+                <span className="text-[10px] text-slate-500 block">
+                  {language === 'ur' ? 'صفر ڈیٹا اخراج' : 'Zero cross-leak'}
+                </span>
               </div>
             </div>
           )}
 
           {/* Response Terminal */}
-          <div className="rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden shadow-2xl relative z-10 font-mono text-xs">
+          <div className="rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden shadow-2xl relative z-10 font-mono text-xs force-ltr">
             <div className="flex items-center justify-between px-5 py-3 border-b border-slate-800/80 bg-slate-900/80 text-slate-300">
               <div className="flex items-center gap-2">
                 <Terminal className="w-4 h-4 text-emerald-400" />
@@ -400,20 +425,24 @@ export default function TechnicalPlayground() {
             <div>
               <div className="flex items-center gap-2 text-sm font-bold text-white">
                 <Radio className="w-4 h-4 text-cyan-400 animate-pulse" />
-                <span>Cluster Redis Telemetry Feed:</span>
+                <span>
+                  {language === 'ur' ? 'کلسٹر ریڈس ٹیلی میٹری فیڈ:' : 'Cluster Redis Telemetry Feed:'}
+                </span>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                   WSS LIVE (TLS 1.3)
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-1">
-                Simulating high-throughput telemetry packets emitted from driver mobile devices.
+                {language === 'ur' 
+                  ? 'ڈرائیور موبائل ڈیوائسز سے موصول ہونے والے تیز رفتار ٹیلی میٹری سگنلز کی سمیولیشن۔' 
+                  : 'Simulating high-throughput telemetry packets emitted from driver mobile devices.'}
               </p>
             </div>
 
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setIsStreaming(!isStreaming)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border cursor-pointer ${
                   isStreaming
                     ? 'bg-amber-600/20 border-amber-500/40 text-amber-300 hover:bg-amber-600/30'
                     : 'bg-emerald-600/20 border-emerald-500/40 text-emerald-300 hover:bg-emerald-600/30'
@@ -421,28 +450,28 @@ export default function TechnicalPlayground() {
               >
                 {isStreaming ? (
                   <>
-                    <Pause className="w-3.5 h-3.5" /> Pause Stream
+                    <Pause className="w-3.5 h-3.5" /> {t.playStreamPause}
                   </>
                 ) : (
                   <>
-                    <Play className="w-3.5 h-3.5" /> Resume Stream
+                    <Play className="w-3.5 h-3.5" /> {t.playStreamResume}
                   </>
                 )}
               </button>
               <button
                 onClick={() => setEvents([])}
-                className="px-3 py-2 rounded-xl text-xs font-mono bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all flex items-center gap-1.5"
+                className="px-3 py-2 rounded-xl text-xs font-mono bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all flex items-center gap-1.5 cursor-pointer"
               >
-                <RotateCcw className="w-3.5 h-3.5" /> Clear
+                <RotateCcw className="w-3.5 h-3.5" /> {t.playStreamClear}
               </button>
             </div>
           </div>
 
           {/* Event Stream Terminal Window */}
-          <div className="rounded-2xl bg-slate-950 border border-slate-800 p-4 font-mono text-xs max-h-[420px] overflow-y-auto space-y-2">
+          <div className="rounded-2xl bg-slate-950 border border-slate-800 p-4 font-mono text-xs max-h-[420px] overflow-y-auto space-y-2 force-ltr">
             {events.length === 0 ? (
               <div className="py-12 text-center text-slate-500 text-xs">
-                Waiting for incoming Redis Pub/Sub events...
+                {language === 'ur' ? 'ریڈس پب/سب ایونٹس کا انتظار ہو رہا ہے...' : 'Waiting for incoming Redis Pub/Sub events...'}
               </div>
             ) : (
               events.map((ev) => {

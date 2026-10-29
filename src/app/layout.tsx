@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist, Geist_Mono, Noto_Sans_Arabic } from 'next/font/google';
 import './globals.css';
+import { LanguageProvider } from '@/context/LanguageContext';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -12,12 +13,20 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
+const notoSansArabic = Noto_Sans_Arabic({
+  variable: '--font-noto-arabic',
+  subsets: ['arabic'],
+  weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
   title: 'Uzair Zahoor | Software Engineer | Next.js, GraphQL & SaaS Architectures',
   description:
     'Portfolio of Uzair Zahoor, Software Engineer with 3+ years of experience engineering scalable Next.js applications, multi-tenant transport SaaS platforms (Allotrac), and real-time GraphQL microservices.',
   keywords: [
     'Uzair Zahoor',
+    'عزیر ظہور',
     'Software Engineer',
     'Next.js Developer',
     'Full Stack Engineer',
@@ -48,10 +57,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} scroll-smooth dark`}
+      className={`${geistSans.variable} ${geistMono.variable} ${notoSansArabic.variable} scroll-smooth dark`}
     >
       <body className="bg-[#060911] text-slate-100 min-h-screen antialiased selection:bg-blue-600 selection:text-white">
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

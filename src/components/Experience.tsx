@@ -2,26 +2,28 @@
 
 import React from 'react';
 import { Briefcase, Building2, Code, CheckCircle2, Check } from 'lucide-react';
-import { experienceData } from '@/data/portfolioData';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Experience() {
+  const { t, data } = useLanguage();
+
   return (
     <section id="experience" className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto relative">
       <div className="text-center space-y-4 mb-16">
         <div className="inline-flex items-center gap-2 text-xs font-mono text-purple-400 tracking-wider uppercase bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20">
-          <Briefcase className="w-3.5 h-3.5" /> Work History
+          <Briefcase className="w-3.5 h-3.5" /> {t.expBadge}
         </div>
-        <h2 className="text-3xl sm:text-5xl font-extrabold text-white">Professional Experience</h2>
+        <h2 className="text-3xl sm:text-5xl font-extrabold text-white">{t.expTitle}</h2>
         <p className="text-slate-400 text-sm sm:text-base">
-          Proven track record engineering high-throughput multi-tenant SaaS platforms.
+          {t.expSubtitle}
         </p>
       </div>
 
-      <div className="relative border-l-2 border-blue-500/30 ml-4 sm:ml-8 space-y-12">
-        {experienceData.map((exp, idx) => (
-          <div key={idx} className="relative pl-8 sm:pl-12 group">
+      <div className="relative border-l-2 rtl:border-l-0 rtl:border-r-2 border-blue-500/30 ml-4 sm:ml-8 rtl:ml-0 rtl:mr-4 rtl:sm:mr-8 space-y-12">
+        {data.experienceData.map((exp, idx) => (
+          <div key={idx} className="relative pl-8 sm:pl-12 rtl:pl-0 rtl:pr-8 rtl:sm:pr-12 group">
             {/* Timeline Node */}
-            <div className={`absolute -left-[17px] top-1 w-8 h-8 rounded-full bg-slate-900 border-2 flex items-center justify-center transition-all shadow-lg ${
+            <div className={`absolute -left-[17px] rtl:left-auto rtl:-right-[17px] top-1 w-8 h-8 rounded-full bg-slate-900 border-2 flex items-center justify-center transition-all shadow-lg ${
               exp.type === 'work'
                 ? 'border-blue-500 text-blue-400 group-hover:scale-125 group-hover:bg-blue-600 group-hover:text-white shadow-blue-500/30'
                 : 'border-slate-600 text-slate-400 group-hover:scale-125 group-hover:border-indigo-500 group-hover:text-indigo-300 shadow-indigo-500/20'
@@ -66,13 +68,13 @@ export default function Experience() {
               </ul>
 
               {exp.tech && (
-                <div className="flex flex-wrap gap-2 pt-2 border-t border-white/5">
-                  {exp.tech.map((t, tIdx) => (
+                <div className="flex flex-wrap gap-2 pt-2 border-t border-white/5 force-ltr">
+                  {exp.tech.map((tName, tIdx) => (
                     <span
                       key={tIdx}
                       className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700/60 text-xs font-mono text-slate-300"
                     >
-                      {t}
+                      {tName}
                     </span>
                   ))}
                 </div>

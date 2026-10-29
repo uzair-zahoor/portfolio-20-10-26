@@ -4,15 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { 
   X, 
   CheckCircle2, 
-  Layers, 
-  Terminal, 
-  Activity, 
-  ArrowRight, 
-  Check, 
-  TrendingUp, 
   AlertCircle 
 } from 'lucide-react';
-import { projectsData } from '@/data/portfolioData';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface ProjectModalProps {
   projectId: string | null;
@@ -21,6 +15,7 @@ interface ProjectModalProps {
 
 export default function ProjectModal({ projectId, onClose }: ProjectModalProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'architecture' | 'code'>('overview');
+  const { data, language, t } = useLanguage();
 
   // Reset tab on project open
   useEffect(() => {
@@ -36,9 +31,9 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
-  if (!projectId || !projectsData[projectId]) return null;
+  if (!projectId || !data.projectsData[projectId]) return null;
 
-  const project = projectsData[projectId];
+  const project = data.projectsData[projectId];
 
   return (
     <div
@@ -55,14 +50,14 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
         <button
           onClick={onClose}
           id="close-project-modal-btn"
-          aria-label="Close modal"
-          className="absolute top-6 right-6 p-2 rounded-xl bg-white/10 text-slate-300 hover:text-white hover:bg-white/20 transition-colors z-20"
+          aria-label={t.modalClose}
+          className="absolute top-6 right-6 rtl:right-auto rtl:left-6 p-2 rounded-xl bg-white/10 text-slate-300 hover:text-white hover:bg-white/20 transition-colors z-20 cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header */}
-        <div className="space-y-2 pr-10">
+        <div className="space-y-2 pr-10 rtl:pr-0 rtl:pl-10">
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono text-blue-400 block">{project.subtitle}</span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300">
@@ -89,36 +84,36 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
         <div className="flex items-center gap-2 border-b border-white/10 pb-2">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
               activeTab === 'overview'
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'text-slate-400 hover:text-white hover:bg-white/5'
             }`}
           >
-            Overview & Solution
+            {language === 'ur' ? 'جائزہ اور حل' : 'Overview & Solution'}
           </button>
           {project.architectureFlow && (
             <button
               onClick={() => setActiveTab('architecture')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === 'architecture'
                   ? 'bg-blue-600 text-white shadow-md'
                   : 'text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
-              Pipeline & Data Flow
+              {language === 'ur' ? 'ڈیٹا فلو اور پائپ لائن' : 'Pipeline & Data Flow'}
             </button>
           )}
           {project.codeSnippet && (
             <button
               onClick={() => setActiveTab('code')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === 'code'
                   ? 'bg-blue-600 text-white shadow-md'
                   : 'text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
-              Resolver Implementation
+              {language === 'ur' ? 'ریزولور نفاذ' : 'Resolver Implementation'}
             </button>
           )}
         </div>
@@ -131,7 +126,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 rounded-2xl bg-red-950/20 border border-red-500/20 space-y-1.5">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-red-400 uppercase tracking-wider font-mono">
-                    <AlertCircle className="w-3.5 h-3.5" /> Core Challenge
+                    <AlertCircle className="w-3.5 h-3.5" /> {language === 'ur' ? 'بنیادی انجینئرنگ چیلنج' : 'Core Challenge'}
                   </div>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     {project.problemStatement}
@@ -139,7 +134,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                 </div>
                 <div className="p-4 rounded-2xl bg-emerald-950/20 border border-emerald-500/20 space-y-1.5">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400 uppercase tracking-wider font-mono">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> Engineered Solution
+                    <CheckCircle2 className="w-3.5 h-3.5" /> {language === 'ur' ? 'تکنیکی حل' : 'Engineered Solution'}
                   </div>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     {project.solutionOverview}
@@ -151,7 +146,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
             {/* Architecture Highlights */}
             <div className="space-y-3">
               <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">
-                Key Contributions & Engineering Highlights:
+                {language === 'ur' ? 'کلیدی شراکتیں اور تکنیکی نکات:' : 'Key Contributions & Engineering Highlights:'}
               </h3>
               <ul className="space-y-2.5 text-sm text-slate-300">
                 {project.architectureHighlights.map((bullet, idx) => (
@@ -165,14 +160,16 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
 
             {/* Tech Stack Pills */}
             <div className="space-y-2 pt-2 border-t border-white/10">
-              <span className="text-[11px] font-mono text-slate-400 block">Technology Stack:</span>
-              <div className="flex flex-wrap gap-1.5">
-                {project.tech.map((t, idx) => (
+              <span className="text-[11px] font-mono text-slate-400 block">
+                {language === 'ur' ? 'ٹیکنالوجی اسٹیک:' : 'Technology Stack:'}
+              </span>
+              <div className="flex flex-wrap gap-1.5 force-ltr">
+                {project.tech.map((tName, idx) => (
                   <span
                     key={idx}
                     className="px-2.5 py-1 rounded-lg bg-blue-500/20 border border-blue-500/30 text-xs font-mono text-blue-300"
                   >
-                    {t}
+                    {tName}
                   </span>
                 ))}
               </div>
@@ -184,7 +181,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
         {activeTab === 'architecture' && project.architectureFlow && (
           <div className="space-y-4 animate-in fade-in duration-200">
             <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">
-              System Execution Flow:
+              {language === 'ur' ? 'سسٹم کا نفاذی بہاؤ:' : 'System Execution Flow:'}
             </h3>
             <div className="space-y-3">
               {project.architectureFlow.map((step) => (
@@ -208,11 +205,11 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
         {/* Tab Content 3: Code Snippet */}
         {activeTab === 'code' && project.codeSnippet && (
           <div className="space-y-3 animate-in fade-in duration-200">
-            <div className="flex items-center justify-between text-xs font-mono text-slate-400">
+            <div className="flex items-center justify-between text-xs font-mono text-slate-400 force-ltr">
               <span>{project.codeSnippet.title}</span>
               <span className="text-blue-400">{project.codeSnippet.language}</span>
             </div>
-            <pre className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed">
+            <pre className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-xs font-mono text-slate-300 overflow-x-auto leading-relaxed force-ltr">
               <code>{project.codeSnippet.code}</code>
             </pre>
           </div>

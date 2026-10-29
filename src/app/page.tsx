@@ -16,17 +16,22 @@ import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import ProjectModal from '@/components/ProjectModal';
 import AiModal from '@/components/AiModal';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Home() {
   const [aiModalOpen, setAiModalOpen] = useState(false);
   const [activeProjectModal, setActiveProjectModal] = useState<string | null>(null);
+  const { dir } = useLanguage();
 
   return (
-    <div className="relative min-h-screen bg-[#060911] text-slate-100 font-sans antialiased selection:bg-blue-600 selection:text-white overflow-x-hidden">
+    <div 
+      dir={dir} 
+      className="relative min-h-screen bg-[#060911] text-slate-100 font-sans antialiased selection:bg-blue-600 selection:text-white overflow-x-hidden transition-all duration-300"
+    >
       {/* Interactive Three.js particle canvas background */}
       <ThreeBackground />
 
-      {/* Fixed Navigation Header */}
+      {/* Fixed Navigation Header with Language Switcher */}
       <Navbar onOpenAiModal={() => setAiModalOpen(true)} />
 
       {/* Main Content Sections */}

@@ -2,12 +2,15 @@
 
 import React from 'react';
 import { Bot, Sparkles, CheckCircle2, Terminal } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface AiLabProps {
   onOpenAiModal: () => void;
 }
 
 export default function AiLab({ onOpenAiModal }: AiLabProps) {
+  const { t, language } = useLanguage();
+
   return (
     <section id="ai-lab" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative">
       <div className="backdrop-blur-xl bg-gradient-to-b from-amber-500/10 via-slate-900/90 to-slate-950 rounded-3xl p-8 sm:p-12 border border-amber-500/30 relative overflow-hidden shadow-2xl">
@@ -20,33 +23,33 @@ export default function AiLab({ onOpenAiModal }: AiLabProps) {
           {/* Left Column */}
           <div className="lg:col-span-7 space-y-6">
             <div className="inline-flex items-center gap-2 text-xs font-mono text-amber-400 tracking-wider uppercase bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/30">
-              <Bot className="w-4 h-4" /> AI Systems Engineering
+              <Bot className="w-4 h-4" /> {t.aiLabBadge}
             </div>
 
             <h2 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
-              AI Systems & Autonomous Workflows
+              {t.aiLabTitle}
             </h2>
 
             <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-              Beyond full-stack web applications, I actively research and build <strong className="text-white">AI Integrations</strong>, <strong className="text-white">RAG Vector Workflows</strong>, and <strong className="text-white">LLM Agent Tools</strong> in Next.js environments to automate intelligent business workflows.
+              {t.aiLabDesc}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
               <div className="p-3.5 rounded-xl bg-slate-950/80 border border-amber-500/20 text-amber-200 flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>RAG Vector Search</span>
+                <span>{language === 'ur' ? 'آر اے جی ویکٹر سرچ' : 'RAG Vector Search'}</span>
               </div>
               <div className="p-3.5 rounded-xl bg-slate-950/80 border border-amber-500/20 text-amber-200 flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>Agent Tool-Calling</span>
+                <span>{language === 'ur' ? 'ایجنٹ ٹول کالنگ' : 'Agent Tool-Calling'}</span>
               </div>
               <div className="p-3.5 rounded-xl bg-slate-950/80 border border-amber-500/20 text-amber-200 flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>Gemini & LLM APIs</span>
+                <span>{language === 'ur' ? 'جیمنائی اور ایل ایل ایم اے پی آئیز' : 'Gemini & LLM APIs'}</span>
               </div>
               <div className="p-3.5 rounded-xl bg-slate-950/80 border border-amber-500/20 text-amber-200 flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>Prompt Architecture</span>
+                <span>{language === 'ur' ? 'پرامپٹ آرکیٹیکچر' : 'Prompt Architecture'}</span>
               </div>
             </div>
 
@@ -54,16 +57,16 @@ export default function AiLab({ onOpenAiModal }: AiLabProps) {
               <button
                 onClick={onOpenAiModal}
                 id="ai-lab-chat-cta"
-                className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-extrabold text-sm shadow-xl shadow-amber-500/20 flex items-center gap-2 transition-all active:scale-95"
+                className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-extrabold text-sm shadow-xl shadow-amber-500/20 flex items-center gap-2 transition-all active:scale-95 cursor-pointer"
               >
-                <Sparkles className="w-4 h-4" /> Chat With My AI Representative
+                <Sparkles className="w-4 h-4" /> {t.aiLabChatBtn}
               </button>
             </div>
           </div>
 
           {/* Code Snippet Display */}
           <div className="lg:col-span-5">
-            <div className="rounded-2xl bg-slate-950 p-5 border border-slate-800 font-mono text-xs space-y-3 shadow-2xl">
+            <div className="rounded-2xl bg-slate-950 p-5 border border-slate-800 font-mono text-xs space-y-3 shadow-2xl force-ltr">
               <div className="flex items-center justify-between text-slate-400 text-[11px] pb-2 border-b border-slate-800/80">
                 <span className="flex items-center gap-1.5">
                   <Terminal className="w-3.5 h-3.5 text-amber-400" />

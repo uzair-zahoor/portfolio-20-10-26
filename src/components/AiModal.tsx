@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bot, X, Send } from 'lucide-react';
 import { ChatMessage } from '@/types/portfolio';
-import { personalInfo } from '@/data/portfolioData';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface AiModalProps {
   isOpen: boolean;
@@ -11,16 +11,22 @@ interface AiModalProps {
 }
 
 export default function AiModal({ isOpen, onClose }: AiModalProps) {
+  const { t, data, language, isRTL } = useLanguage();
   const [chatInput, setChatInput] = useState('');
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: 'initial',
-      sender: 'bot',
-      text: `Hi! I'm Uzair's AI representative. Feel free to ask about his engineering experience at Pixako Technologies, Allotrac, multi-tenant GraphQL architectures, or contact details!`
-    }
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const chatBottomRef = useRef<HTMLDivElement | null>(null);
+
+  // Set initial welcome message based on active language
+  useEffect(() => {
+    setMessages([
+      {
+        id: 'initial',
+        sender: 'bot',
+        text: t.aiModalInitial
+      }
+    ]);
+  }, [language, t.aiModalInitial]);
 
   // Auto-scroll chat to bottom
   useEffect(() => {
@@ -53,13 +59,15 @@ export default function AiModal({ isOpen, onClose }: AiModalProps) {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: query })
+        body: JSON.stringify({ prompt: query, language })
       });
 
       if (!res.ok) throw new Error('API response failed');
 
-      const data = await res.json();
-      const botText = data.reply || `I'm here to help with questions about Uzair's engineering work. Feel free to email him directly at ${personalInfo.email}.`;
+      const resData = await res.json();
+      const botText = resData.reply || (language === 'ur'
+        ? `عزیر کے انجینئرنگ تجربے کے بارے میں دریافت کرنے کا شکریہ۔ آپ ان سے براہ راست ${data.personalInfo.email} پر رابطہ کر سکتے ہیں۔`
+        : `I'm here to help with questions about Uzair's engineering work. Feel free to email him directly at ${data.personalInfo.email}.`);
 
       setMessages((prev) => [
         ...prev,
@@ -67,15 +75,30 @@ export default function AiModal({ isOpen, onClose }: AiModalProps) {
       ]);
     } catch (err) {
       console.error('Chat request error:', err);
-      // Seamless intelligent client-side fallback
-      let fallbackText = `Uzair is a Software Engineer specializing in Next.js, GraphQL, and multi-tenant SaaS systems. Feel free to reach out to him directly at ${personalInfo.email}!`;
+      // Seamless intelligent client-side fallback in appropriate language
+      let fallbackText = '';
       const q = query.toLowerCase();
-      if (q.includes('allotrac') || q.includes('pixako')) {
-        fallbackText = `At Pixako Technologies, Uzair is a core engineer on Allotrac—a high-throughput multi-tenant transport management SaaS platform. He engineered multi-tenant isolation schemas, GraphQL subscriptions, WebSockets with Redis Pub/Sub, and Xero API integrations.`;
-      } else if (q.includes('skill') || q.includes('stack')) {
-        fallbackText = `Uzair's core stack includes Next.js, React.js, TypeScript, Node.js, GraphQL (Apollo Server), DataLoader, MongoDB, Redis Pub/Sub, and AG Grid.`;
-      } else if (q.includes('contact') || q.includes('email') || q.includes('phone')) {
-        fallbackText = `You can email Uzair at ${personalInfo.email} or call +92 311 5762092. LinkedIn: ${personalInfo.linkedin}`;
+
+      if (language === 'ur') {
+        if (q.includes('allotrac') || q.includes('الوٹراک') || q.includes('pixako') || q.includes('پکساکو')) {
+          fallbackText = `پکساکو ٹیکنالوجیز میں عزیر الوٹراک (Allotrac) کے کور انجینئر ہیں—جو ایک ہائی تھرو پٹ ملٹی ٹیننٹ لاجسٹکس ساس پلیٹ فارم ہے۔ انہوں نے ٹیننٹ ڈیٹا آئسولیشن، گراف کیو ایل سبسکرپشنز، ریڈس پب/سب ویب ساکٹس، اور زیرو اکاؤنٹنگ انضمام کو کامیابی سے تیار کیا۔`;
+        } else if (q.includes('skill') || q.includes('مہارت') || q.includes('stack')) {
+          fallbackText = `عزیر کی بنیادی تکنیکی مہارتوں میں نیکسٹ جے ایس (Next.js)، ری ایکٹ (React)، ٹائپ اسکرپٹ (TypeScript)، نوڈ جے ایس (Node.js)، گراف کیو ایل اپولو سرور، ڈیٹا لوڈر، مونگو ڈی بی، اور ریڈس شامل ہیں۔`;
+        } else if (q.includes('contact') || q.includes('رابطہ') || q.includes('email') || q.includes('phone')) {
+          fallbackText = `آپ عزیر کو ${data.personalInfo.email} پر ای میل بھیج سکتے ہیں یا فون نمبر +92 311 5762092 پر رابطہ کر سکتے ہیں۔ لنکڈ اِن: ${data.personalInfo.linkedin}`;
+        } else {
+          fallbackText = `عزیر ظہور نیکسٹ جے ایس، گراف کیو ایل اور ملٹی ٹیننٹ ساس سسٹمز کے ماہر سافٹ ویئر انجینئر ہیں۔ آپ ان سے براہ راست ${data.personalInfo.email} پر رابطہ کر سکتے ہیں!`;
+        }
+      } else {
+        if (q.includes('allotrac') || q.includes('pixako')) {
+          fallbackText = `At Pixako Technologies, Uzair is a core engineer on Allotrac—a high-throughput multi-tenant transport management SaaS platform. He engineered multi-tenant isolation schemas, GraphQL subscriptions, WebSockets with Redis Pub/Sub, and Xero API integrations.`;
+        } else if (q.includes('skill') || q.includes('stack')) {
+          fallbackText = `Uzair's core stack includes Next.js, React.js, TypeScript, Node.js, GraphQL (Apollo Server), DataLoader, MongoDB, Redis Pub/Sub, and AG Grid.`;
+        } else if (q.includes('contact') || q.includes('email') || q.includes('phone')) {
+          fallbackText = `You can email Uzair at ${data.personalInfo.email} or call +92 311 5762092. LinkedIn: ${data.personalInfo.linkedin}`;
+        } else {
+          fallbackText = `Uzair is a Software Engineer specializing in Next.js, GraphQL, and multi-tenant SaaS systems. Feel free to reach out to him directly at ${data.personalInfo.email}!`;
+        }
       }
 
       setMessages((prev) => [
@@ -87,7 +110,15 @@ export default function AiModal({ isOpen, onClose }: AiModalProps) {
     }
   };
 
-  const quickPrompts = [
+  const quickPrompts = language === 'ur' ? [
+    { label: 'الوٹراک ساس', prompt: 'پکساکو ٹیکنالوجیز میں الوٹراک ساس پر عزیر کے کام کی تفصیل بتائیں' },
+    { label: 'ملٹی ٹیننٹ آرکیٹیکچر', prompt: 'عزیر نے ملٹی ٹیننٹ ڈیٹا آئسولیشن کیسے ڈیزائن کی؟' },
+    { label: 'ڈیٹا لوڈر بیجنگ', prompt: 'گراف کیو ایل ڈیٹا لوڈر نے تاخیر میں 85 فیصد کمی کیسے لائی؟' },
+    { label: 'ریڈس ٹیلی میٹری', prompt: 'ریڈس پب/سب اور ویب ساکٹ ٹیلی میٹری پائپ لائن کی وضاحت کریں' },
+    { label: 'زیرو اکاؤنٹنگ سنک', prompt: 'خودکار زیرو انوائسنگ مائیکرو سروس کیسے بنائی گئی؟' },
+    { label: 'پیداواری میٹرکس', prompt: 'عزیر کے کلیدی پیداواری نتائج اور پیمانے کیا ہیں؟' },
+    { label: 'رابطہ معلومات', prompt: 'عزیر سے کیسے رابطہ کیا جا سکتا ہے؟' }
+  ] : [
     { label: 'Allotrac SaaS', prompt: "Tell me about Uzair's work on Allotrac at Pixako Technologies" },
     { label: 'Multi-Tenant Isolation', prompt: "How does Uzair architect multi-tenant data isolation?" },
     { label: 'DataLoader Batching', prompt: "How did DataLoader reduce API latency by 85%?" },
@@ -115,15 +146,19 @@ export default function AiModal({ isOpen, onClose }: AiModalProps) {
               <Bot className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-sm text-white">{personalInfo.name}&apos;s AI Assistant</h3>
-              <p className="text-[11px] text-purple-300 font-mono">Next.js & Gemini API</p>
+              <h3 className="font-bold text-sm text-white">
+                {data.personalInfo.name} - {t.aiModalTitle}
+              </h3>
+              <p className="text-[11px] text-purple-300 font-mono">
+                {language === 'ur' ? 'نیکسٹ جے ایس اور جیمنائی اے پی آئی' : 'Next.js & Gemini API'}
+              </p>
             </div>
           </div>
           <button
             onClick={onClose}
             id="close-ai-modal-btn"
             aria-label="Close AI assistant"
-            className="p-2 rounded-xl bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-2 rounded-xl bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -160,7 +195,7 @@ export default function AiModal({ isOpen, onClose }: AiModalProps) {
               </div>
               <div className="p-3 rounded-2xl bg-slate-800/80 border border-white/10 text-slate-400 italic text-xs flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-purple-400 animate-bounce"></span>
-                <span>Thinking...</span>
+                <span>{language === 'ur' ? 'سوچ رہا ہے...' : 'Thinking...'}</span>
               </div>
             </div>
           )}
@@ -173,7 +208,7 @@ export default function AiModal({ isOpen, onClose }: AiModalProps) {
             <button
               key={idx}
               onClick={() => handleSendMessage(item.prompt)}
-              className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white whitespace-nowrap transition-colors active:scale-95"
+              className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white whitespace-nowrap transition-colors active:scale-95 cursor-pointer"
             >
               {item.label}
             </button>
@@ -187,7 +222,7 @@ export default function AiModal({ isOpen, onClose }: AiModalProps) {
             id="ai-chat-input"
             value={chatInput}
             onChange={(e) => setChatInput(e.target.value)}
-            placeholder="Ask anything about Uzair's Next.js & GraphQL experience..."
+            placeholder={t.aiModalPlaceholder}
             className="flex-1 px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-purple-500 transition-colors"
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
@@ -199,10 +234,10 @@ export default function AiModal({ isOpen, onClose }: AiModalProps) {
           <button
             onClick={() => handleSendMessage()}
             id="ai-send-message-btn"
-            aria-label="Send message"
-            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold text-xs flex items-center justify-center transition-all shadow-md active:scale-95"
+            aria-label={t.aiModalSend}
+            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold text-xs flex items-center justify-center transition-all shadow-md active:scale-95 cursor-pointer"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-4 h-4 rtl:rotate-180" />
           </button>
         </div>
       </div>
